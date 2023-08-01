@@ -5,10 +5,11 @@ import { useFormik } from 'formik';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase/firebaseConfig';
+import { auth, provider } from '../firebase/firebaseConfig';
 import { option } from '../constants';
 
 const Auth = () => {
@@ -55,6 +56,15 @@ const Auth = () => {
     onSubmit,
   });
 
+  // google ile giriş
+  const handleGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then(() => navigate('/home'))
+      .catch((err) =>
+        toast.error('Hata oluştu: ' + err.code, option)
+      );
+  };
+
   return (
     <div className="bg-zinc-800 h-[100vh] grid place-items-center">
       {/* Kutucuk */}
@@ -66,7 +76,10 @@ const Auth = () => {
           Twitter'a giriş yap
         </h1>
 
-        <div className="flex items-center gap-3 bg-white text-black py-2 px-10 rounded-full cursor-pointer hover:bg-gray-200">
+        <div
+          onClick={handleGoogle}
+          className="flex items-center gap-3 bg-white text-black py-2 px-10 rounded-full cursor-pointer hover:bg-gray-200"
+        >
           <img className="h-[20px]" src={google} />
           <span className="whitespace-nowrap">
             Google ile giriş yap
